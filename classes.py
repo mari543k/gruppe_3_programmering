@@ -1,22 +1,16 @@
 from functions import *
 import csv
 
-
-class Person():
-    def __init__(self, first_name, last_name):
+class Coordinator():
+    def __init__(self, first_name, last_name, user_id, password):
         self.first_name = first_name
         self.last_name = last_name
-
-
-class Coordinator(Person):
-    def __int__(self, first_name, last_name, user_id, password):
         self.user_id = user_id
         self.password = password
-        super().__init__(first_name, last_name)
 
 
-class Crew(Person):
-    def __int__(self, first_name, last_name, crew_id, job_id):
+class Crew():
+    def __init__(self, crew_id, job_id):
         self.crew_id = crew_id
         self.job_id = job_id
         super().__init__(first_name, last_name)
