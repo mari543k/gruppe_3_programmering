@@ -86,3 +86,4 @@ class Maintenance_Job_Calendar():
         self.date = date
         self.time = time
         self.status = status
+

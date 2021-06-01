@@ -10,6 +10,10 @@ def login():
     user_id = input("\t\t\t\tBruger ID: ")
     password = input("\t\t\t\tAdgangskode: ")
 
+    fetch_user(user_id, password)
+
+
+def fetch_user(user_id, password):
     # kigger ned i csv_users fil
     with open("csv_users.csv", mode="r") as f:
         csv_users = csv.reader(f, delimiter=",")
@@ -41,7 +45,7 @@ def show_all_windfarms(coordinator):
     with open("csv_windfarms.csv", mode="r") as f:
         csv_windfarms = csv.reader(f, delimiter=",")
 
-        print("\t\t\t\tVindfarm ID\t\tNavn\t\t\tPlacering\tStatus".upper())
+        print("\t\tVindfarm ID\t\tNavn\t\t\tPlacering\tStatus".upper())
 
         for row in csv_windfarms:
             # omskriver talværdi til forståelig tekst
@@ -52,7 +56,7 @@ def show_all_windfarms(coordinator):
             elif row[3] == "3":
                 row[3] = "** Critical **"
 
-            print("\t\t\t\t{}\t\t\t\t{}\t\t{}\t\t{}".format(row[0], row[1], row[2], row[3]))
+            print("\t\t{}\t\t\t\t{}\t\t{}\t\t{}".format(row[0], row[1], row[2], row[3]))
 
     print("-" * 75)
     print("\t\t\t\t\t\t\tVælg en handling")
@@ -105,7 +109,7 @@ def show_windfarm_details(windfarm_id):
                 print("\t\t\t\t\t\t\t\t{}".format(windfarm.name))
                 print("*" * 75)
                 print("\t\t\t\tPlacering:\t{}".format(windfarm.location))
-                print("\t\t\t\tStatus:\t{}".format(windfarm.status))
+                print("\t\t\t\tStatus:\t\t{}".format(windfarm.status))
                 print()
 
                 windfarm.fetch_all_windmills()
