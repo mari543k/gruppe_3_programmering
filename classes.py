@@ -31,11 +31,10 @@ class Windco():
 
 
 class Windfarm():
-    def __init__(self, windfarm_id, location, windmill_list, maintenance_total=0, status="OK"):
+    def __init__(self, windfarm_id, name, location, status):
         self.windfarm_id = windfarm_id
+        self.name = name
         self.location = location
-        self.windmill_list = windmill_list
-        self.maintenance_total = maintenance_total
         self.status = status
 
     def fetch_all_windmills(self):
