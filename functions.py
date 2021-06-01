@@ -14,10 +14,11 @@ def login():
     with open("csv_users.csv", mode="r") as f:
         csv_users = csv.reader(f, delimiter=",")
 
-        for user in csv_users:
+        for row in csv_users:
             # validerer om user eksisterer
-            if user_id and password in user:
-                coordinator = Coordinator(user[0],user_id,password)
+            if user_id and password in row:
+                # danner en ny instans af Coordinator klassen
+                coordinator = Coordinator(row[0],user_id,password)
                 print("")
                 # videregiver information til næste funktion
                 show_all_windfarms(coordinator)
@@ -29,7 +30,7 @@ def login():
 
 
 def show_all_windfarms(coordinator):
-    # kigger objektets navn
+    # kigger på coordinator objektets navn
     name = coordinator.name.upper()
 
     print("*" * 75)
@@ -43,18 +44,15 @@ def show_all_windfarms(coordinator):
         print("\t\t\t\tID\t\tNavn\t\t\tPlacering\tStatus".upper())
 
         for row in csv_windfarms:
-            # danner for hver iteration et ny instans af Windfarm klassen
-            windfarm = Windfarm(row[0], row[1], row[2], row[3])
-
             # omskriver talværdi til forståelig tekst
-            if windfarm.status == "1":
-                windfarm.status = "OK"
-            elif windfarm.status == "2":
-                windfarm.status = "** Warning **"
-            elif windfarm.status == "3":
-                windfarm.status = "** Critical **"
+            if row[3] == "1":
+                row[3] = "OK"
+            elif row[3] == "2":
+                row[3] = "** Warning **"
+            elif row[3] == "3":
+                row[3] = "** Critical **"
 
-            print("\t\t\t\t{}\t\t{}\t\t{}\t\t{}".format(windfarm.windfarm_id, windfarm.name, windfarm.location, windfarm.status))
+            print("\t\t\t\t{}\t\t{}\t\t{}\t\t{}".format(row[0], row[1], row[2], row[3]))
 
     print("-" * 75)
     print("\t\t\t\t\t\t\tVælg en handling")
@@ -70,7 +68,6 @@ def show_all_windfarms(coordinator):
             login()
         elif user_choice in range(5, 25, 5):
             print("")
-
             # videregiver information til næste funktion
             show_windfarm_details(user_choice)
         else:
@@ -81,5 +78,34 @@ def show_all_windfarms(coordinator):
         show_all_windfarms(coordinator)
 
 
-def show_windfarm_details(windfarm):
-    pass
+def show_windfarm_details(windfarm_id):
+    # konverterer variablen windfarm_id fra int til str så den kan bruges senere til at kigge ned i csv_windfarms filen
+    windfarm_id = str(windfarm_id)
+
+    # kigger ned i csv_windfarms fil
+    with open("csv_windfarms.csv", mode="r") as f:
+        csv_windfarms = csv.reader(f, delimiter=",")
+
+        for row in csv_windfarms:
+            # udvælger den række der matcher værdien for windfarm_id
+            if windfarm_id in row:
+
+                # danner en ny instans af Windfarm klassen
+                windfarm = Windfarm(windfarm_id, row[1], row[2], row[3])
+
+                # omskriver talværdi til forståelig tekst
+                if windfarm.status == "1":
+                    windfarm.status = "OK"
+                elif windfarm.status == "2":
+                    windfarm.status = "** Warning **"
+                elif windfarm.status == "3":
+                    windfarm.status = "** Critical **"
+
+                print("*" * 75)
+                print("\t\t\t\t\t\t\t\t{}".format(windfarm.name))
+                print("*" * 75)
+                print("\t\t\t\tPlacering:\t{}".format(windfarm.location))
+                print("\t\t\t\tStatus:\t{}".format(windfarm.status))
+
+
+
