@@ -15,8 +15,9 @@ def login():
 
         for user in csv_users:
             if user_id and password in user:
+                coordinator = Coordinator(user[0],user_id,password)
                 print("")
-                show_all_windfarms(user)
+                show_all_windfarms(coordinator)
                 return True
 
     print("\n\t\t\t\t\t\tUgyldigt log ind! Prøv igen\n".upper())
@@ -24,8 +25,8 @@ def login():
     return False
 
 
-def show_all_windfarms(user):
-    name = user[0].upper()
+def show_all_windfarms(coordinator):
+    name = coordinator.name.upper()
 
     print("*" * 75)
     print("\t\t\t\t\t\t\t\tHej {}!".format(name))
@@ -49,10 +50,10 @@ def show_all_windfarms(user):
             show_windfarm_details(user_choice)
         else:
             print("\n\t\t\t\t\t\tUgyldigt valg! Prøv igen\n".upper())
-            show_all_windfarms(user)
+            show_all_windfarms(coordinator)
     except:
         print("\n\t\t\t\t\t\tUgyldigt valg! Prøv igen\n".upper())
-        show_all_windfarms(user)
+        show_all_windfarms(coordinator)
 
 
 def show_windfarm_details(windfarm):
