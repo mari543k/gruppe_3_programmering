@@ -1,0 +1,15 @@
+5,False,5
+10,False,5
+15,False,5
+20,True,10
+25,True,10
+30,False,10
+35,False,15
+40,False,15
+45,False,15
+50,True,20
+55,False,20
+60,False,20
+65,True,25
+70,True,25
+75,False,25

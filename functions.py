@@ -41,7 +41,7 @@ def show_all_windfarms(coordinator):
     with open("csv_windfarms.csv", mode="r") as f:
         csv_windfarms = csv.reader(f, delimiter=",")
 
-        print("\t\t\t\tID\t\tNavn\t\t\tPlacering\tStatus".upper())
+        print("\t\t\t\tVindfarm ID\t\tNavn\t\t\tPlacering\tStatus".upper())
 
         for row in csv_windfarms:
             # omskriver talværdi til forståelig tekst
@@ -52,7 +52,7 @@ def show_all_windfarms(coordinator):
             elif row[3] == "3":
                 row[3] = "** Critical **"
 
-            print("\t\t\t\t{}\t\t{}\t\t{}\t\t{}".format(row[0], row[1], row[2], row[3]))
+            print("\t\t\t\t{}\t\t\t\t{}\t\t{}\t\t{}".format(row[0], row[1], row[2], row[3]))
 
     print("-" * 75)
     print("\t\t\t\t\t\t\tVælg en handling")
@@ -106,6 +106,7 @@ def show_windfarm_details(windfarm_id):
                 print("*" * 75)
                 print("\t\t\t\tPlacering:\t{}".format(windfarm.location))
                 print("\t\t\t\tStatus:\t{}".format(windfarm.status))
+                print()
 
-
+                windfarm.fetch_all_windmills()
 
