@@ -14,4 +14,9 @@ Code laws:
 
 from functions import *
 
-print("hello world!")
+
+def main():
+    login()
+
+
+main()

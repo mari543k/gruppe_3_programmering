@@ -2,9 +2,8 @@ from functions import *
 import csv
 
 class Coordinator():
-    def __init__(self, first_name, last_name, user_id, password):
-        self.first_name = first_name
-        self.last_name = last_name
+    def __init__(self, name, user_id, password):
+        self.name = name
         self.user_id = user_id
         self.password = password
 
