@@ -44,19 +44,19 @@ class Windfarm():
         with open("csv_windmills.csv", mode="r") as f:
             csv_windmills = csv.reader(f, delimiter=",")
 
-            print("\t\t\t\tVindmølle ID\tVedligeholdelse".upper())
+            print("\t\t\t\tVindmølle ID\tVedligeholdelse\t\tMegawatt".upper())
 
             for row in csv_windmills:
 
                 # udtrækker de vindmøller med et matchende windfarm_id
-                if self.windfarm_id in row[2]:
+                if self.windfarm_id in row[3]:
 
                     # læg 1 til maintenance_count hvis True eksisterer for vindmøllen
                     if "True" in row:
                         maintenance_count += 1
 
                     # danner en ny instans af Windmill klassen
-                    windmill = Windmill(row[0], row[1], row[2])
+                    windmill = Windmill(row[0], row[1], row[2], row[3])
 
                     # omskriver boolean til forståelig tekst
                     if windmill.maintenance == "True":
@@ -64,7 +64,7 @@ class Windfarm():
                     elif windmill.maintenance == "False":
                         windmill.maintenance = "Nej"
 
-                    print("\t\t\t\t{}\t\t\t\t{}".format(windmill.windmill_id, windmill.maintenance))
+                    print("\t\t\t\t{}\t\t\t\t{}\t\t\t\t\t{}".format(windmill.windmill_id, windmill.maintenance, windmill.megawatt))
 
         if maintenance_count == 0:
             print("\n\t\t\t\tIngen vedligeholdelse påkrævet")
@@ -73,17 +73,19 @@ class Windfarm():
 
 
 class Windmill():
-    def __init__(self, windmill_id, maintenance, windfarm_id):
+    def __init__(self, windmill_id, maintenance, megawatt, windfarm_id):
         self.windmill_id = windmill_id
         self.maintenance = maintenance
+        self.megawatt = megawatt
         self.windfarm_id = windfarm_id
 
 
 class Maintenance_Job_Calendar():
-    def __init__(self, windfarm_id, job_role, date, time=0, status="OK"):
+    def __init__(self, windfarm_id, job_role, date, time, status, responsible):
         self.windfarm_id = windfarm_id
         self.job_role = job_role
         self.date = date
         self.time = time
         self.status = status
+        self.responsible = responsible
 
