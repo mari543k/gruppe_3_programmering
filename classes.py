@@ -3,10 +3,28 @@ import csv
 
 
 class Coordinator():
-    def __init__(self, name, user_id, password):
+    def __init__(self, name="", user_id="", password=""):       # attributter med tomme værdier - gør det muligt at instansiere et tomt objekt
         self.name = name
         self.user_id = user_id
         self.password = password
+
+    def set_name(self, name):
+        self.name = name
+
+    def set_user_id(self, user_id):
+        self.user_id = user_id
+
+    def set_password(self, password):
+        self.password = password
+
+    def get_name(self):
+        return self.name
+
+    def get_user_id(self):
+        return self.user_id
+
+    def get_password(self):
+        return self.password
 
 
 class Crew():

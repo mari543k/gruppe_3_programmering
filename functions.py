@@ -2,215 +2,174 @@ from classes import *
 import csv
 
 
+coordinator = Coordinator()     # instansiering af tomt objekt for Coordinator klassen der er globalt tilgængeligt alle steder i filen
+
+
 def login():
-    print("*" * 75)
-    print("\t\t\t\t\t\t\tLog ind på Windco")
-    print("*" * 75)
+    h1("Velkommen til Windco", 7)
 
     user_id = input("\t\t\t\tBruger ID: ")
     password = input("\t\t\t\tAdgangskode: ")
 
-    fetch_user(user_id, password)
+    fetch_user(user_id, password)       # videregiver værdier til næste funktion
 
 
 def fetch_user(user_id, password):
-    # kigger ned i csv_users fil
-    with open("csv_users.csv", mode="r") as f:
+    with open("csv_users.csv", mode="r") as f:      # læser i csv_users fil
         csv_users = csv.reader(f, delimiter=",")
 
         for row in csv_users:
-            # validerer om user eksisterer
-            if user_id and password in row:
-                # danner en ny instans af Coordinator klassen
-                coordinator = Coordinator(row[0],user_id,password)
+            if user_id and password in row:     # validerer om rækken eksisterer
+                coordinator.set_name(row[0])        # erstatter coordinator objektets tomme værdier med nogle reelle værdier
+                coordinator.set_user_id(user_id)
+                coordinator.set_password(password)
+
                 print("")
-                # videregiver information til næste funktion
-                show_all_windfarms(coordinator)
+                fetch_all_windfarms()
                 return True
 
-    print("\n\t\t\t\t\t\tUgyldigt log ind! Prøv igen\n".upper())
-    login()
+    message("Ugyldigt log ind! Prøv igen", 6)
+    login()     # starter log ind processen forfra hvis user ikke findes
     return False
 
 
-def show_all_windfarms(coordinator):
-    # kigger på coordinator objektets navn
-    name = coordinator.name.upper()
+def fetch_all_windfarms():
+    h1("Hej {}!".format(coordinator.get_name().upper()), 8)        # henter coordinator objektets navn og bruger det i overskriften
 
-    print("*" * 75)
-    print("\t\t\t\t\t\t\t\tHej {}!".format(name))
-    print("*" * 75)
-
-    # kigger ned i csv_windfarms fil
-    with open("csv_windfarms.csv", mode="r") as f:
+    with open("csv_windfarms.csv", mode="r") as f:      # læser csv_windfarms fil
         csv_windfarms = csv.reader(f, delimiter=",")
 
-        print("\t\tVindfarm ID\t\tNavn\t\t\t\tPlacering\tStatus".upper())
+        print("\tVindfarm ID\t\tNavn\t\t\t\tPlacering\tStatus".upper())       # danner tabel header
 
         for row in csv_windfarms:
-            # omskriver talværdi til forståelig tekst
-            if row[3] == "1":
+            if row[3] == "1":       # omskriver talværdi til forståelig tekst
                 row[3] = "OK"
             elif row[3] == "2":
-                row[3] = "** Warning **"
+                row[3] = "* Advarsel *"
             elif row[3] == "3":
-                row[3] = "** Critical **"
+                row[3] = "** Kritisk **"
 
-            print("\t\t{}\t\t\t\t{}\t\t{}\t\t{}".format(row[0], row[1], row[2], row[3]))
+            print("\t{}\t\t\t\t{}\t\t{}\t\t{}".format(row[0], row[1], row[2], row[3]))        # printer hver række
 
-    print("-" * 75)
-    print("\t\t\t\t\t\t\tVælg en handling")
-    print("-" * 75)
+    select_windfarm()
 
-    # try/except ved int input sørger for programmet ikke stopper
-    try:
-        user_choice = int(input("\t\t\t\tLog ud (1) \n\t\t\t\tVælg vindfarm (indtast vindfarm ID): "))
 
-        # kigger på brugerens valg og handler derudfra
-        if user_choice == 1:
-            print("\n\t\t\t\t\t\t\t\tLogger ud...\n".upper())
+def select_windfarm():
+    h2("Vælg en handling", 7)
+
+    try:        # try/except ved int input sørger for programmet ikke stopper hvis ugyldig værdi indtastes
+        choice = int(input("\t\t\t\tLog ud (1) \n\t\t\t\tVælg vindfarm (indtast vindfarm ID): "))
+
+        if choice == 1:     # kigger på brugerens valg og handler derudfra
+            message("Logger ud....", 8)
             login()
-        elif user_choice in range(10, 35, 5):
+        elif choice in range(10, 30, 5):        # kigger om brugeren har indtastet et værdi fra 5 til 30 med et hop på 5
             print("")
-            # videregiver information til næste funktion
-            show_windfarm_details(user_choice, coordinator)
+            fetch_windfarm(choice)     # videregiver værdi til næste funktion
         else:
-            print("\n\t\t\t\t\t\tUgyldigt valg! Prøv igen\n".upper())
-            show_all_windfarms(coordinator)
-    except:
-        print("\n\t\t\t\t\t\tUgyldigt valg! Prøv igen\n".upper())
-        show_all_windfarms(coordinator)
+            message("Ugyldigt valg! Prøv igen", 6)
+            fetch_all_windfarms()
+    except Exception as e:
+        message("Ugyldigt valg! Prøv igen", 6)
+        fetch_all_windfarms()
 
 
-def show_windfarm_details(windfarm_id, coordinator):
-    # konverterer variablen windfarm_id fra int til str så den kan bruges senere til at kigge ned i csv_windfarms filen
-    windfarm_id = str(windfarm_id)
+def fetch_windfarm(windfarm_id):
+    windfarm_id = str(windfarm_id)      # konverterer variablen windfarm_id fra int til str så den kan bruges senere til at kigge ned i csv_windfarms filen
 
-    # kigger ned i csv_windfarms fil
-    with open("csv_windfarms.csv", mode="r") as f:
+    with open("csv_windfarms.csv", mode="r") as f:      # kigger ned i csv_windfarms fil
         csv_windfarms = csv.reader(f, delimiter=",")
 
         for row in csv_windfarms:
-            # udvælger den række der matcher værdien for windfarm_id
-            if windfarm_id in row:
+            if windfarm_id in row[0]:      # udvælger den række der indeholder værdien for windfarm_id i index 0
 
-                # danner en ny instans af Windfarm klassen
-                windfarm = Windfarm(windfarm_id, row[1], row[2], row[3])
+                windfarm = Windfarm(windfarm_id, row[1], row[2], row[3])        # instansiering af Windfarm objekt
 
-                # omskriver talværdi til forståelig tekst
-                if windfarm.status == "1":
+                if windfarm.status == "1":      # omskriver talværdi til forståelig tekst
                     windfarm.status = "OK"
                 elif windfarm.status == "2":
                     windfarm.status = "** Advarsel **"
                 elif windfarm.status == "3":
                     windfarm.status = "** Kritisk **"
 
-                print("*" * 75)
-                print("\t\t\t\t\t\t\t\t{}".format(windfarm.name))
-                print("*" * 75)
-                print("\t\t\t\tPlacering:\t{}".format(windfarm.location))
-                print("\t\t\t\tStatus:\t\t{}".format(windfarm.status))
-                print()
+    h1(windfarm.name, 6)       # indsætter navnet for vinfarmen i overskrift
+    print("\t\t\t\tPlacering:\t{}".format(windfarm.location))       # printer flere værdier for vindfarmen ud
+    print("\t\t\t\tStatus:\t\t{}".format(windfarm.status))
 
-                windfarm.fetch_all_windmills()
+    print("")
+    windfarm.fetch_all_windmills()      # eksekverer klassemetode
 
-    print("-" * 75)
-    print("\t\t\t\t\t\t\tVælg en handling")
-    print("-" * 75)
+    h2("Vælg en handling", 7)
 
-    # try/except ved int input sørger for programmet ikke stopper
-    try:
-        user_choice = int(input("\t\t\t\tTilbage til oversigt (1) \n\t\t\t\tSe kalender (2) \n\t\t\t\tOpret vedligeholdelses opgave (3): "))
+    try:    # try/except ved int input sørger for programmet ikke stopper
+        user_choice = int(input("\t\t\t\tTilbage til hovedmenu (1) \n\t\t\t\tSe kalender (2) \n\t\t\t\tOpret vedligeholdelses opgave (3): "))
 
-        # kigger på brugerens valg og handler derudfra
-        if user_choice == 1:
+        if user_choice == 1:        # kigger på brugerens valg og handler derudfra
             print("")
-            show_all_windfarms(coordinator)
+            fetch_all_windfarms()
         elif user_choice == 2:
             print("")
-            show_maintenance_calendar(windfarm_id, coordinator)
+            request_maintenance_calendar(windfarm_id)      # videregiver værdi til næste funktion
         elif user_choice == 3:
-            request_maintenance(windfarm_id, coordinator)
+            request_maintenance(windfarm_id)        # videregiver værdi til næste funktion
         else:
-            print("\n\t\t\t\t\t\tUgyldigt valg! Prøv igen\n".upper())
+            message("Ugyldigt valg! Prøv igen", 6)
+            fetch_windfarm(windfarm_id)
     except:
-        print("\n\t\t\t\t\t\tUgyldigt valg! Prøv igen\n".upper())
-        show_windfarm_details(coordinator)
+        message("Ugyldigt valg! Prøv igen", 6)
+        fetch_windfarm(windfarm_id)
 
 
-def show_maintenance_calendar(windfarm_id, coordinator):
-    print("*" * 75)
-    print("\t\t\t\t\t\t\tKalenderoversigt")
-    print("*" * 75)
+def request_maintenance_calendar(windfarm_id):
+    h1("Kalenderoversigt", 7)
 
-    # kigger ned i csv_calendar fil
-    with open("csv_calendar.csv", mode="r") as f:
+    with open("csv_calendar.csv", mode="r") as f:       # kigger ned i csv_calendar fil
         csv_calendar = csv.reader(f, delimiter=",")
 
-        print("\tDato\t\t\tTidspunkt\tOpgavetype\t\tAnsvarlig\tStatus".upper())
+        print("\tDato\t\t\tTidspunkt\tOpgavetype\t\tAnsvarlig\tStatus".upper())     # danner tabel header
 
         for row in csv_calendar:
+            if windfarm_id in row[0]:      # udvælger den række der indeholder værdien for windfarm_id i index 0
 
-            # udvælger den række der matcher værdien for windfarm_id
-            if windfarm_id in row:
-
-                # omskriver talværdi til forståelig tekst
-                if row[4] == "1":
+                if row[4] == "1":       # omskriver talværdi til forståelig tekst
                     row[4] = "Afsluttet"
                 elif row[4] == "2":
                     row[4] = "Igangværende"
                 elif row[4] == "3":
                     row[4] = "** Afventer **"
 
-                print("\t{}\t\t{}\t\t{}\t\t{}\t\t\t{}".format(row[3], row[2], row[1], row[5], row[4]))
+                print("\t{}\t\t{}\t\t{}\t\t{}\t\t\t{}".format(row[3], row[2], row[1], row[5], row[4]))      # printer hver række
 
-    print("-" * 75)
-    print("\t\t\t\t\t\t\tVælg en handling")
-    print("-" * 75)
+    h2("Vælg en handling", 7)
 
-    # try/except ved int input sørger for programmet ikke stopper
-    try:
-        user_choice = int(input("\t\t\t\tTilbage til oversigt (1) \n\t\t\t\tTilbage til vindfarm (2) \n\t\t\t\tOpret vedligeholdelses opgave (3): "))
+    try:        # try/except ved int input sørger for programmet ikke stopper
+        choice = int(input("\t\t\t\tTilbage til hovedmenu (1) \n\t\t\t\tTilbage til vindfarm (2) \n\t\t\t\tOpret vedligeholdelses opgave (3): "))
 
-        # kigger på brugerens valg og handler derudfra
-        if user_choice == 1:
+        if choice == 1:     # kigger på brugerens valg og handler derudfra
             print("")
-            show_all_windfarms(coordinator)
-        elif user_choice == 2:
+            fetch_all_windfarms()
+        elif choice == 2:
             print("")
-            show_windfarm_details(windfarm_id, coordinator)
-        elif user_choice == 3:
-            request_maintenance(windfarm_id, coordinator)
+            fetch_windfarm(windfarm_id)
+        elif choice == 3:
+            print("")
+            request_maintenance(windfarm_id)
         else:
-            print("\n\t\t\t\t\t\tUgyldigt valg! Prøv igen\n".upper())
+            message("Ugyldigt valg! Prøv igen", 6)
+            request_maintenance_calendar(windfarm_id)
     except:
-        print("\n\t\t\t\t\t\tUgyldigt valg! Prøv igen\n".upper())
-        show_windfarm_details(coordinator)
+        message("Ugyldigt valg! Prøv igen", 6)
+        request_maintenance_calendar(windfarm_id)
 
 
-def request_maintenance(windfarm_id, coordinator):
-    print("*" * 75)
-    print("\t\t\t\t\t\t\tOpret opgave")
-    print("*" * 75)
+def request_maintenance(windfarm_id):
+    h1("Opret opgave", 7)
 
-    date = input("\t\t\t\tIndtast dato (dd-mm-yyyy): ")
-    time = input("\t\t\t\tIndtast tidspunkt (hh:mm): ")
+    fetch_crew()
 
-    with open("csv_crew.csv", mode="r") as f:
-        csv_crew = csv.reader(f, delimiter=",")
+    job_role = input("\n\t\t\t\t\t\tVælg opgavenr.: ")
 
-        print("-" * 75)
-        print("\t\t\t\tNr.\t\tOpgavetype".upper())
-        print("-" * 75)
-
-        for row in csv_crew:
-            crew = Crew(row[0], row[1])
-
-            print("\t\t\t\t{}\t\t{}".format(crew.crew_id, crew.job_id))
-
-    job_role = input("\t\t\t\tVælg opgavenr.: ")
-
-    if job_role == "1":
+    if job_role == "1":     # omskriver talværdi til passende tekst
         job_role = "Tekniker"
     elif job_role == "2":
         job_role = "Brandmand"
@@ -220,20 +179,62 @@ def request_maintenance(windfarm_id, coordinator):
         job_role = "Elektriker"
     elif job_role == "5":
         job_role = "Ingeniør"
+    else:
+        message("Ugyldigt valg! Prøv igen", 6)
+        request_maintenance(windfarm_id)
 
-    task = Maintenance_Job_Calendar(windfarm_id, job_role, date, time, "3", coordinator.name)
+    date = input("\t\t\t\t\t\tIndtast dato (dd-mm-yyyy): ")
+    time = input("\t\t\t\t\t\tIndtast tidspunkt (hh:mm): ")
 
-    # åbner csv_calendar filen i "a" mode - giver mulighed for tilføje til filen
-    with open("csv_calendar.csv", mode="a", newline="") as f:
+    task = Maintenance_Job_Calendar(windfarm_id, job_role, date, time, "3", coordinator.name)       # instansiering af Maintenance_Job_Calendar objekt
+
+    update_calendar(task.windfarm_id, task.job_role, task.date, task.time, task.status, task.responsible)       # videregiver værdier til næste funktion
+
+
+def fetch_crew():
+    with open("csv_crew.csv", mode="r") as f:       # kigger ned i csv_crew fil
+        csv_crew = csv.reader(f, delimiter=",")
+
+        h2("Nr.\t\tOpgavetype".upper(), 6)     # danner tabel header
+
+        for row in csv_crew:
+            crew = Crew(row[0], row[1])     # instansiering af Crew objekt
+
+            print("\t\t\t\t\t\t{}\t\t{}".format(crew.crew_id, crew.job_id))     # printer hver række
+
+
+def update_calendar(windfarm_id, job_role, time, date, status, responsible):
+    with open("csv_calendar.csv", mode="a", newline="") as f:       # åbner csv_calendar filen i "a" mode - giver mulighed for tilføje til filen
         csv_calendar = csv.writer(f, delimiter=",")
+        csv_calendar.writerow([windfarm_id, job_role, time, date, status, responsible])       # skriver ny række til filen med de angivne værdier
 
-        csv_calendar.writerow([task.windfarm_id, task.job_role, task.time, task.date, task.status, task.responsible])
-
-    # TODO timer her
-
-    print("\n\t\t\t\tOpgaven er nu oprettet!\n")
-    show_windfarm_details(windfarm_id, coordinator)
+    message("Opgaven er nu oprettet!", 6)
+    request_maintenance_calendar(windfarm_id)
 
 
+# funktion der forebygger redundant kode
+def h1(text, tabs):
+    text = text
+    tabs = "\t" * tabs
+
+    print("*" * 75)
+    print("{}{}".format(tabs, text))
+    print("*" * 75)
 
 
+# funktion der forebygger redundant kode
+def h2(text, tabs):
+    text = text
+    tabs = "\t" * tabs
+
+    print("-" * 75)
+    print("{}{}".format(tabs, text))
+    print("-" * 75)
+
+
+# funktion der forebygger redundant kode
+def message(text, tabs):
+    text = text
+    tabs = "\t" * tabs
+
+    print("\n{}{}\n".format(tabs, text).upper())
