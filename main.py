@@ -1,5 +1,8 @@
+from functions import *
+
+
 """
-Code laws:
+Code of cunduct:
     1. Følg pycharms automatiske indentering
     2. Klasser skrives med CamelCase
     3. Navn for variabler opdeles med _
@@ -12,7 +15,12 @@ Code laws:
     10. Ved indlejring af variabler i en String benyttes format() metoden = "{}".format()
 """
 
-from functions import *
+"""
+Bruger guide:
+    1. Kør gerne programmer med PyCharm
+    2. TIP: Bruger ID: 10
+    3. TIP: Adgangskode: 1010
+"""
 
 
 def main():

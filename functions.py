@@ -2,11 +2,14 @@ from classes import *
 import csv
 
 
-coordinator = Coordinator()     # instansiering af tomt objekt for Coordinator klassen der er globalt tilgængeligt alle steder i filen
+windco = Windco("Danmark")
+
+# instansiering af tomt objekt for Coordinator klassen der er globalt tilgængeligt alle steder i filen
+coordinator = Coordinator()
 
 
 def login():
-    h1("Velkommen til Windco", 7)
+    h1("Velkommen til Windco {}".format(windco.country), 6)
 
     user_id = input("\t\t\t\tBruger ID: ")
     password = input("\t\t\t\tAdgangskode: ")
