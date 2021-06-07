@@ -1,39 +1,10 @@
-from classes import *
-import csv
 
 
-windco = Windco("Danmark")
-
-# instansiering af tomt objekt for Coordinator klassen der er globalt tilgængeligt alle steder i filen
-coordinator = Coordinator()
 
 
-def login():
-    h1("Velkommen til Windco {}".format(windco.country), 6)
-
-    user_id = input("\t\t\t\tBruger ID: ")
-    password = input("\t\t\t\tAdgangskode: ")
-
-    fetch_user(user_id, password)       # videregiver værdier til næste funktion
 
 
-def fetch_user(user_id, password):
-    with open("csv_users.csv", mode="r") as f:      # læser i csv_users fil
-        csv_users = csv.reader(f, delimiter=",")
 
-        for row in csv_users:
-            if user_id and password in row:     # validerer om rækken eksisterer
-                coordinator.set_name(row[0])        # erstatter coordinator objektets tomme værdier med nogle reelle værdier
-                coordinator.set_user_id(user_id)
-                coordinator.set_password(password)
-
-                print("")
-                fetch_all_windfarms()
-                return True
-
-    message("Ugyldigt log ind! Prøv igen", 6)
-    login()     # starter log ind processen forfra hvis user ikke findes
-    return False
 
 
 def fetch_all_windfarms():

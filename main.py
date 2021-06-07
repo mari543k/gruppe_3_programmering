@@ -1,19 +1,19 @@
-from functions import *
+
 
 
 """
 Code of cunduct:
-    1. Følg pycharms automatiske indentering
-    2. Klasser skrives med CamelCase
-    3. Navn for variabler opdeles med _
-    4. Navn for funktioner og metoder opdeles med _
-    5. Alle String skrives med "" citationstegn
-    6. Operatører skrives med mellemrum før og efter tegnet
-    7. Selve programmet skrives på dansk - kode altid på engelsk
-    8. Forklar koden med kommentarer løbende
-    9. Pas på med for lidt/for mange linjeskift både indeni scope og udenfor scope
-    10. Ved indlejring af variabler i en String benyttes format() metoden = "{}".format()
+    1. Selve programmet skrives på dansk og kode altid på engelsk
+    2. Ordopdeling for klase- funktions/metode- og variabelnavne skrives med _
+    3. Alle String omsluttes med "" og ikke ''
+    4. Operatører skrives med mellemrum før og efter tegnet
+    5. Husk altid forklarende kommentarer i koden
+    6. Følg PyCharms automatiske indentering
+    7. Ved indlejring af variabler i en String benyttes format() metoden = "{}".format()
+    8. Undgå for meget redundant kode
 """
+from classes import Windco, Coordinator
+from user import login
 
 """
 Bruger guide:
@@ -21,6 +21,11 @@ Bruger guide:
     2. TIP: Bruger ID: 10
     3. TIP: Adgangskode: 1010
 """
+
+windco = Windco("Danmark")
+
+# instansiering af tomt objekt for Coordinator klassen der er globalt tilgængeligt alle steder i filen
+coordinator = Coordinator()
 
 
 def main():
