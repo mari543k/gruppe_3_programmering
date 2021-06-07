@@ -1,4 +1,3 @@
-from functions import *
 import csv
 
 
@@ -21,10 +20,9 @@ class Coordinator():
         return self.name
 
 
-class Crew():
-    def __init__(self, crew_id, job_id):
-        self.crew_id = crew_id
-        self.job_id = job_id
+class Windco():
+    def __init__(self, country):
+        self.country = country
 
 
 class Windfarm():
@@ -37,7 +35,7 @@ class Windfarm():
     def fetch_all_windmills(self):
         maintenance_count = 0       # tælleren er som standard 0
 
-        with open("csv_windmills.csv", mode="r") as f:      # kigger ned i csv_windfarms fil
+        with open("windmills.csv", mode="r") as f:      # kigger ned i csv_windfarms fil
             csv_windmills = csv.reader(f, delimiter=",")
 
             print("\t\t\t\tVindmølle ID\tVedligeholdelse\t\tMegawatt".upper())      # danner tabel header
@@ -72,6 +70,12 @@ class Windmill():
         self.windfarm_id = windfarm_id
 
 
+class Crew():
+    def __init__(self, crew_id, job_id):
+        self.crew_id = crew_id
+        self.job_id = job_id
+
+
 class Maintenance_Job_Calendar():
     def __init__(self, windfarm_id, job_role, date, time, status, responsible):
         self.windfarm_id = windfarm_id
@@ -80,8 +84,3 @@ class Maintenance_Job_Calendar():
         self.time = time
         self.status = status
         self.responsible = responsible
-
-
-class Windco():
-    def __init__(self, country):
-        self.country = country

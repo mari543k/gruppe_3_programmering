@@ -1,4 +1,4 @@
-
+from functions import login
 
 
 """
@@ -12,8 +12,6 @@ Code of cunduct:
     7. Ved indlejring af variabler i en String benyttes format() metoden = "{}".format()
     8. Undgå for meget redundant kode
 """
-from classes import Windco, Coordinator
-from user import login
 
 """
 Bruger guide:
@@ -21,11 +19,6 @@ Bruger guide:
     2. TIP: Bruger ID: 10
     3. TIP: Adgangskode: 1010
 """
-
-windco = Windco("Danmark")
-
-# instansiering af tomt objekt for Coordinator klassen der er globalt tilgængeligt alle steder i filen
-coordinator = Coordinator()
 
 
 def main():

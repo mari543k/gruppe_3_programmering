@@ -1,16 +1,44 @@
+from classes import *
 
 
+windco = Windco("Danmark")
+
+# instansiering af tomt objekt for Coordinator klassen der er globalt tilgængeligt alle steder i filen
+coordinator = Coordinator()
 
 
+def login():
+    h1("Velkommen til Windco {}".format(windco.country), 6)
+
+    user_id = input("\t\t\t\tBruger ID: ")
+    password = input("\t\t\t\tAdgangskode: ")
+
+    fetch_user(user_id, password)       # videregiver værdier til næste funktion
 
 
+def fetch_user(user_id, password):
+    with open("users.csv", mode="r") as f:      # læser i csv_users fil
+        csv_users = csv.reader(f, delimiter=",")
 
+        for row in csv_users:
+            if user_id and password in row:     # validerer om rækken eksisterer
+                coordinator.set_name(row[0])        # erstatter coordinator objektets tomme værdier med nogle reelle værdier
+                coordinator.set_user_id(user_id)
+                coordinator.set_password(password)
+
+                print("")
+                fetch_all_windfarms()
+                return True
+
+    message("Ugyldigt log ind! Prøv igen", 6)
+    login()     # starter log ind processen forfra hvis user ikke findes
+    return False
 
 
 def fetch_all_windfarms():
     h1("Hej {}!".format(coordinator.get_name().upper()), 8)        # henter coordinator objektets navn og bruger det i overskriften
 
-    with open("csv_windfarms.csv", mode="r") as f:      # læser csv_windfarms fil
+    with open("windfarms.csv", mode="r") as f:      # læser csv_windfarms fil
         csv_windfarms = csv.reader(f, delimiter=",")
 
         print("\tVindfarm ID\t\tNavn\t\t\t\tPlacering\tStatus".upper())       # danner tabel header
@@ -51,7 +79,7 @@ def select_windfarm():
 def fetch_windfarm(windfarm_id):
     windfarm_id = str(windfarm_id)      # konverterer variablen windfarm_id fra int til str så den kan bruges senere til at kigge ned i csv_windfarms filen
 
-    with open("csv_windfarms.csv", mode="r") as f:      # kigger ned i csv_windfarms fil
+    with open("windfarms.csv", mode="r") as f:      # kigger ned i csv_windfarms fil
         csv_windfarms = csv.reader(f, delimiter=",")
 
         for row in csv_windfarms:
@@ -97,7 +125,7 @@ def fetch_windfarm(windfarm_id):
 def request_maintenance_calendar(windfarm_id):
     h1("Kalenderoversigt", 7)
 
-    with open("csv_calendar.csv", mode="r") as f:       # kigger ned i csv_calendar fil
+    with open("calendar.csv", mode="r") as f:       # kigger ned i csv_calendar fil
         csv_calendar = csv.reader(f, delimiter=",")
 
         print("\tDato\t\t\tTidspunkt\tOpgavetype\t\tAnsvarlig\tStatus".upper())     # danner tabel header
@@ -166,7 +194,7 @@ def request_maintenance(windfarm_id):
 
 
 def fetch_crew():
-    with open("csv_crew.csv", mode="r") as f:       # kigger ned i csv_crew fil
+    with open("crew.csv", mode="r") as f:       # kigger ned i csv_crew fil
         csv_crew = csv.reader(f, delimiter=",")
 
         h2("Nr.\t\tOpgavetype".upper(), 6)     # danner tabel header
@@ -178,7 +206,7 @@ def fetch_crew():
 
 
 def update_calendar(windfarm_id, job_role, time, date, status, responsible):
-    with open("csv_calendar.csv", mode="a", newline="") as f:       # åbner csv_calendar filen i "a" mode - giver mulighed for tilføje til filen
+    with open("calendar.csv", mode="a", newline="") as f:       # åbner csv_calendar filen i "a" mode - giver mulighed for tilføje til filen
         csv_calendar = csv.writer(f, delimiter=",")
         csv_calendar.writerow([windfarm_id, job_role, time, date, status, responsible])       # skriver ny række til filen med de angivne værdier
 
