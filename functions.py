@@ -208,7 +208,7 @@ def fetch_crew():
 def update_calendar(windfarm_id, job_role, time, date, status, responsible):
     with open("calendar.csv", mode="a", newline="") as f:       # åbner csv_calendar filen i "a" mode - giver mulighed for tilføje til filen
         csv_calendar = csv.writer(f, delimiter=",")
-        csv_calendar.writerow([windfarm_id, job_role, time, date, status, responsible])       # skriver ny række til filen med de angivne værdier
+        csv_calendar.writerow([windfarm_id, job_role, date, time, status, responsible])       # skriver ny række til filen med de angivne værdier
 
     message("Opgaven er nu oprettet!", 6)
     request_maintenance_calendar(windfarm_id)
